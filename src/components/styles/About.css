@@ -41,6 +41,42 @@
   letter-spacing: 1px;
 }
 
+/* About links row */
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+  align-items: center;
+}
+.about-link-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(194, 164, 255, 0.25);
+  background: rgba(194, 164, 255, 0.05);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  letter-spacing: 0.4px;
+}
+.about-link-item:hover {
+  background: rgba(194, 164, 255, 0.12);
+  border-color: rgba(194, 164, 255, 0.4);
+  color: var(--accentColor);
+}
+.about-link-highlight {
+  border-color: rgba(194, 164, 255, 0.4);
+  color: var(--accentColor);
+}
+.about-location {
+  opacity: 0.65;
+}
+
 @media only screen and (min-width: 600px) {
   .about-section {
     justify-content: center;

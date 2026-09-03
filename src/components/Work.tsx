@@ -68,6 +68,9 @@ const Work = () => {
                 </div>
                 <h4>Tools and features</h4>
                 <p>{project.technologies}</p>
+                {project.description && (
+                  <p className="work-desc">{project.description}</p>
+                )}
               </div>
               <WorkImage image={project.image} alt={project.title} link={project.link} />
             </div>
@@ -79,3 +82,4 @@ const Work = () => {
 };
 
 export default Work;
+

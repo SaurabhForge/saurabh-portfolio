@@ -1,4 +1,4 @@
-import { MdArrowOutward, MdCopyright } from "react-icons/md";
+import { MdArrowOutward, MdCopyright, MdPhone } from "react-icons/md";
 import "./styles/Contact.css";
 import { config } from "../config";
 import gsap from "gsap";
@@ -68,6 +68,13 @@ const Contact = () => {
                 {config.contact.email}
               </a>
             </p>
+            <h4>Phone</h4>
+            <p>
+              <a href={`tel:${config.contact.phone}`} data-cursor="disable" className="contact-phone">
+                <MdPhone style={{ verticalAlign: "middle", marginRight: "4px" }} />
+                {config.contact.phone}
+              </a>
+            </p>
             <h4>Location</h4>
             <p>
               <span>{config.social.location}</span>
@@ -91,25 +98,7 @@ const Contact = () => {
               data-cursor="disable"
               className="contact-social"
             >
-              Linkedin <MdArrowOutward />
-            </a>
-            <a
-              href={config.contact.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              Twitter <MdArrowOutward />
-            </a>
-            <a
-              href={config.contact.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              Instagram <MdArrowOutward />
+              LinkedIn <MdArrowOutward />
             </a>
           </div>
           <div className="contact-box">
