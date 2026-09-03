@@ -179,6 +179,46 @@
   font-family: "Geist", sans-serif;
 }
 
+/* Resume download button */
+.resume-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid rgba(194, 164, 255, 0.5);
+  border-radius: 40px;
+  background: rgba(194, 164, 255, 0.08);
+  backdrop-filter: blur(8px);
+  text-decoration: none;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}
+.resume-btn:hover {
+  background: rgba(194, 164, 255, 0.18);
+  border-color: rgba(194, 164, 255, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(194, 164, 255, 0.2);
+  color: #fff;
+}
+.resume-btn-icon {
+  font-size: 16px;
+  line-height: 1;
+  display: inline-block;
+  animation: resumeBounce 1.5s ease-in-out infinite;
+}
+@keyframes resumeBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
 /* .landing-intro h1 span {
    font-weight: 200; 
 } */

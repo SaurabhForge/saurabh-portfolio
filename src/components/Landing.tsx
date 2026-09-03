@@ -18,6 +18,15 @@ const Landing = ({ children }: PropsWithChildren) => {
               <br />
               {lastName && <span>{lastName.toUpperCase()}</span>}
             </h1>
+            <a
+              href="/resume/Saurabh_Kumar_Resume.pdf"
+              download="Saurabh_Kumar_Resume.pdf"
+              className="resume-btn"
+              data-cursor="disable"
+            >
+              <span className="resume-btn-icon">↓</span>
+              Download Resume
+            </a>
           </div>
           <div className="landing-info">
             <h3>A Creative</h3>
