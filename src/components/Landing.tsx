@@ -21,6 +21,8 @@ const Landing = ({ children }: PropsWithChildren) => {
             <a
               href="/resume/Saurabh_Kumar_Resume.pdf"
               download="Saurabh_Kumar_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="resume-btn"
               data-cursor="disable"
             >

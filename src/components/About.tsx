@@ -107,6 +107,8 @@ const About = () => {
           <a
             href="/resume/Saurabh_Kumar_Resume.pdf"
             download="Saurabh_Kumar_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="about-link-item about-link-highlight"
             data-cursor="disable"
           >

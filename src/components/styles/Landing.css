@@ -347,6 +347,8 @@ h2.landing-info-h2 {
     left: auto;
     right: 66%;
     transform: translate(0%, -50%);
+    z-index: 20;
+    pointer-events: auto;
   }
 
   .landing-info {
