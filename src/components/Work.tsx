@@ -181,9 +181,13 @@ const Work = () => {
       const sectionEl = sectionRef.current;
       if (!flexEl || !sectionEl) return;
 
-      const totalScrollWidth = flexEl.scrollWidth;
+      const boxes = flexEl.querySelectorAll(".work-box");
+      if (boxes.length === 0) return;
+
+      const boxWidth = (boxes[0] as HTMLElement).offsetWidth || 560;
+      const totalBoxesWidth = boxWidth * boxes.length;
       const viewportWidth = window.innerWidth;
-      const translateX = Math.max(0, totalScrollWidth - viewportWidth + 120);
+      const translateX = Math.max(0, totalBoxesWidth - viewportWidth + 120);
 
       if (translateX <= 0) return;
 

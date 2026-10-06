@@ -6,6 +6,8 @@
   width: 100%;
   padding: 100px 0 80px;
   position: relative;
+  z-index: 35;
+  background-color: var(--backgroundColor);
   box-sizing: border-box;
 }
 

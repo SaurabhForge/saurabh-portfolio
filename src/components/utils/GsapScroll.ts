@@ -34,6 +34,12 @@ export function setCharTimeline(
       end: "bottom top",
       scrub: true,
       invalidateOnRefresh: true,
+      onLeave: () => {
+        gsap.set(".character-model", { autoAlpha: 0, pointerEvents: "none", display: "none" });
+      },
+      onEnterBack: () => {
+        gsap.set(".character-model", { autoAlpha: 1, pointerEvents: "none", display: "block" });
+      },
     },
   });
   let screenLight: any, monitor: any;
@@ -111,8 +117,8 @@ export function setCharTimeline(
       tl3
         .fromTo(
           ".character-model",
-          { y: "0%" },
-          { y: "-100%", duration: 4, ease: "none", delay: 1 },
+          { y: "0%", autoAlpha: 1 },
+          { y: "-100%", autoAlpha: 0, duration: 4, ease: "none", delay: 1 },
           0
         )
         .fromTo(".whatIDO", { y: 0 }, { y: "15%", duration: 2 }, 0)

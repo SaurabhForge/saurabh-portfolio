@@ -95,13 +95,14 @@ body {
 .techstack {
   width: 100%;
   position: relative;
-  height: var(--vh);
+  z-index: 30;
+  height: 100vh;
   min-height: 100vh;
   margin: 0 auto;
   margin-top: 0;
   margin-bottom: 0;
-  padding-top: 150px;
-  padding-bottom: 150px;
+  padding-top: 80px;
+  padding-bottom: 40px;
   background: linear-gradient(180deg, rgba(11, 8, 12, 0.92) 0%, rgba(11, 8, 12, 0.98) 100%);
   background-color: var(--backgroundColor);
   overflow: hidden;
@@ -131,16 +132,72 @@ body {
 }
 
 .techstack h2 {
-  font-size: 80px;
+  font-size: 70px;
   text-align: center;
   position: absolute;
   width: 100%;
-  top: 150px;
+  top: 90px;
   left: 0;
   font-weight: 400;
   text-transform: uppercase;
-  z-index: 3;
+  z-index: 32;
   margin: 0;
+}
+
+.techstack-subtitle {
+  position: absolute;
+  top: 175px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  z-index: 32;
+  margin: 0;
+}
+
+.tech-badge-container {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 950px;
+  z-index: 35;
+  pointer-events: auto;
+}
+
+.tech-badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.tech-badge {
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f4f4f5;
+  background: rgba(194, 164, 255, 0.08);
+  border: 1px solid rgba(194, 164, 255, 0.2);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.tech-badge:hover {
+  background: rgba(194, 164, 255, 0.22);
+  border-color: rgba(194, 164, 255, 0.6);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(194, 164, 255, 0.25);
 }
 
 @media screen and (min-width: 768px) {
@@ -151,5 +208,17 @@ body {
 @media screen and (max-width: 900px) {
   .techstack h2 {
     font-size: 40px;
+    top: 90px;
+  }
+  .techstack-subtitle {
+    top: 150px;
+    font-size: 12px;
+  }
+  .tech-badge-container {
+    bottom: 35px;
+  }
+  .tech-badge {
+    padding: 6px 14px;
+    font-size: 12px;
   }
 }

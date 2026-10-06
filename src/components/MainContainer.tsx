@@ -13,6 +13,40 @@ import setSplitText from "./utils/splitText";
 
 const TechStack = lazy(() => import("./TechStack"));
 
+const TechStackFallback = () => (
+  <div className="techstack" id="techstack">
+    <h2>My Techstack</h2>
+    <p className="techstack-subtitle">
+      Core Technical Ecosystem & Architecture
+    </p>
+    <div className="tech-badge-container">
+      <div className="tech-badge-group">
+        {[
+          "React",
+          "Next.js",
+          "TypeScript",
+          "Node.js",
+          "Python",
+          "FastAPI",
+          "Solidity",
+          "Ethereum",
+          "Docker",
+          "MongoDB",
+          "MySQL",
+          "Express",
+          "Tailwind CSS",
+          "Three.js",
+          "Git & GitHub",
+        ].map((skill) => (
+          <span key={skill} className="tech-badge">
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 const MainContainer = ({ children }: PropsWithChildren) => {
   const [isDesktopView, setIsDesktopView] = useState<boolean>(
     window.innerWidth > 1024
@@ -36,13 +70,13 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       <Navbar />
       <SocialIcons />
       {isDesktopView && children}
-      <div className="container-main">
+      <div className="container-content">
         <Landing>{!isDesktopView && children}</Landing>
         <About />
         <WhatIDo />
         <Career />
         <Work />
-        <Suspense fallback={<div>Loading....</div>}>
+        <Suspense fallback={<TechStackFallback />}>
           <TechStack />
         </Suspense>
         <LinkedInSection />
