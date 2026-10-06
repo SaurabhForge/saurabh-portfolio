@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { config } from "../config";
 import { FaGithub, FaStar } from "react-icons/fa6";
-import { MdRefresh, MdCheckCircle } from "react-icons/md";
+import { MdRefresh, MdCheckCircle, MdArrowOutward } from "react-icons/md";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,7 +38,7 @@ interface GitHubRepo {
   topics?: string[];
 }
 
-const CACHE_KEY = "saurabh_github_repos_dynamic_v1";
+const CACHE_KEY = "saurabh_github_repos_v3";
 const CACHE_TTL = 15 * 60 * 1000; // 15 mins
 
 function formatRepoTitle(name: string): string {
@@ -63,9 +63,13 @@ function inferCategory(repo: GitHubRepo): string {
 }
 
 const Work = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const flexRef = useRef<HTMLDivElement>(null);
+
   const [projects, setProjects] = useState<ProjectItem[]>(() => {
     return config.projects.map((p) => ({ ...p, isFeatured: true }));
   });
+  const [totalRepoCount, setTotalRepoCount] = useState<number>(19);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Fetch live repos from GitHub API
@@ -75,9 +79,10 @@ const Work = () => {
       if (!force) {
         const cached = sessionStorage.getItem(CACHE_KEY);
         if (cached) {
-          const { data, timestamp } = JSON.parse(cached);
+          const { data, timestamp, total } = JSON.parse(cached);
           if (Date.now() - timestamp < CACHE_TTL) {
             mergeRepos(data);
+            if (total) setTotalRepoCount(total);
             setIsLoading(false);
             return;
           }
@@ -91,7 +96,13 @@ const Work = () => {
       if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
 
       const repos: GitHubRepo[] = await res.json();
-      sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data: repos, timestamp: Date.now() }));
+      const filtered = repos.filter((r) => !r.fork && r.name.toLowerCase() !== "saurabhforge");
+      setTotalRepoCount(filtered.length);
+
+      sessionStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({ data: repos, timestamp: Date.now(), total: filtered.length })
+      );
       mergeRepos(repos);
     } catch (err) {
       console.warn("Using curated static projects:", err);
@@ -108,7 +119,7 @@ const Work = () => {
     const merged: ProjectItem[] = [];
     const usedNames = new Set<string>();
 
-    // 1. Add curated featured projects
+    // 1. Add curated featured projects with live star counts
     config.projects.forEach((cp) => {
       const match = filtered.find(
         (r) =>
@@ -131,10 +142,9 @@ const Work = () => {
       }
     });
 
-    // 2. Automatically add any other newly created public repos from GitHub
-    filtered.forEach((repo) => {
-      if (usedNames.has(repo.name.toLowerCase())) return;
-
+    // 2. Automatically add any newly created public repos from GitHub (up to 4 newest)
+    const newRepos = filtered.filter((r) => !usedNames.has(r.name.toLowerCase()));
+    newRepos.slice(0, 3).forEach((repo) => {
       const techList = [repo.language, ...(repo.topics || []).slice(0, 2)]
         .filter(Boolean)
         .join(" · ");
@@ -160,59 +170,57 @@ const Work = () => {
     fetchGitHubRepos(false);
   }, []);
 
-  // Dynamic GSAP horizontal scroll timeline
+  // Butter-smooth GSAP horizontal scroll with zero layout jump
   useEffect(() => {
-    let timeline: gsap.core.Timeline | null = null;
+    if (window.innerWidth <= 1024) return;
 
-    // Small delay to ensure all DOM boxes have rendered and measured
-    const timeout = setTimeout(() => {
-      const boxes = document.getElementsByClassName("work-box");
-      if (boxes.length === 0) return;
+    let ctx: gsap.Context | null = null;
 
-      const container = document.querySelector(".work-container");
-      if (!container) return;
+    const timer = setTimeout(() => {
+      const flexEl = flexRef.current;
+      const sectionEl = sectionRef.current;
+      if (!flexEl || !sectionEl) return;
 
-      const rectLeft = container.getBoundingClientRect().left;
-      const rect = boxes[0].getBoundingClientRect();
-      const parentWidth = boxes[0].parentElement!.getBoundingClientRect().width;
-      const padding = parseInt(window.getComputedStyle(boxes[0]).padding) / 2 || 40;
-
-      const translateX = rect.width * boxes.length - (rectLeft + parentWidth) + padding;
+      const totalScrollWidth = flexEl.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      const translateX = Math.max(0, totalScrollWidth - viewportWidth + 120);
 
       if (translateX <= 0) return;
 
-      ScrollTrigger.getById("work")?.kill();
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionEl,
+            start: "top top",
+            end: () => `+=${translateX}`,
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            id: "work",
+            invalidateOnRefresh: true,
+          },
+        });
 
-      timeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".work-section",
-          start: "top top",
-          end: `+=${translateX}`,
-          scrub: true,
-          pin: true,
-          id: "work",
-          invalidateOnRefresh: true,
-        },
-      });
-
-      timeline.to(".work-flex", {
-        x: -translateX,
-        ease: "none",
-      });
+        tl.to(flexEl, {
+          x: -translateX,
+          ease: "none",
+        });
+      }, sectionEl);
 
       ScrollTrigger.refresh();
-    }, 150);
+    }, 120);
 
     return () => {
-      clearTimeout(timeout);
-      timeline?.kill();
+      clearTimeout(timer);
+      ctx?.revert();
       ScrollTrigger.getById("work")?.kill();
     };
   }, [projects]);
 
   return (
-    <div className="work-section" id="work">
+    <div className="work-section" id="work" ref={sectionRef}>
       <div className="work-container section-container">
+        {/* Top Header Row */}
         <div className="work-top-bar">
           <h2>
             My <span>Work</span>
@@ -221,7 +229,7 @@ const Work = () => {
           <div className="work-live-sync-pill">
             <span className={`work-live-dot ${isLoading ? "syncing" : ""}`} />
             <span className="work-live-text">
-              <MdCheckCircle className="work-live-icon" /> Live GitHub Sync (@SaurabhForge)
+              <MdCheckCircle className="work-live-icon" /> Live Sync with GitHub (@SaurabhForge)
             </span>
             <button
               className="work-live-refresh"
@@ -235,7 +243,8 @@ const Work = () => {
           </div>
         </div>
 
-        <div className="work-flex">
+        {/* Dynamic Horizontal Scroll Stream */}
+        <div className="work-flex" ref={flexRef}>
           {projects.map((project, index) => {
             const indexStr = (index + 1).toString().padStart(2, "0");
             return (
@@ -270,8 +279,19 @@ const Work = () => {
                       className="work-meta-link"
                       data-cursor="disable"
                     >
-                      <FaGithub /> GitHub
+                      <FaGithub /> Source
                     </a>
+                    {project.homepage && (
+                      <a
+                        href={project.homepage}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="work-meta-link live"
+                        data-cursor="disable"
+                      >
+                        Live <MdArrowOutward />
+                      </a>
+                    )}
                   </div>
                 </div>
 
@@ -285,6 +305,28 @@ const Work = () => {
               </div>
             );
           })}
+
+          {/* End Card: View All GitHub Repositories */}
+          <div className="work-box work-box-more">
+            <div className="work-more-card">
+              <div className="work-more-icon">
+                <FaGithub />
+              </div>
+              <h3>Explore All Repositories</h3>
+              <p>
+                {totalRepoCount}+ open-source projects, smart contracts, AI pipelines & experiments on GitHub.
+              </p>
+              <a
+                href="https://github.com/SaurabhForge?tab=repositories"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="work-more-btn"
+                data-cursor="disable"
+              >
+                View @SaurabhForge <MdArrowOutward />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
