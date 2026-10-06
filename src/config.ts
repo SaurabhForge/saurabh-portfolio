@@ -7,6 +7,8 @@ export const config = {
     },
     social: {
         github: "SaurabhForge",
+        linkedin: "https://www.linkedin.com/in/saurabh-kumar-59aa14265",
+        linkedinUsername: "saurabh-kumar-59aa14265",
         email: "sk1300374@gmail.com",
         phone: "+916387686390",
         location: "Bengaluru, Karnataka, India"
